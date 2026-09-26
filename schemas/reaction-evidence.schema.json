@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GemAgents reaction chemistry evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reaction_id", "chemistry_class", "source", "source_version", "recipe"],
+  "properties": {
+    "reaction_id": {"type": "string", "minLength": 1},
+    "chemistry_class": {
+      "enum": [
+        "strict",
+        "unknown_chemistry",
+        "imbalanced",
+        "empirical_biomass",
+        "authorized_rescue"
+      ]
+    },
+    "source": {"type": "string", "minLength": 1},
+    "source_version": {"type": "string", "minLength": 1},
+    "recipe": {"type": "object"},
+    "equation_fingerprint": {"type": "object"},
+    "patch_id": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "unresolved_reason": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"source": {"const": "unresolved"}}},
+      "then": {"required": ["unresolved_reason"]}
+    }
+  ]
+}

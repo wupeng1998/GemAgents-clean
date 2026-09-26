@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GemAgents tool specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "version",
+    "parameter_schema",
+    "prerequisite_assets",
+    "output_artifact_schema",
+    "permissions",
+    "side_effects",
+    "budget",
+    "failure_types"
+  ],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "parameter_schema": {"type": "object"},
+    "prerequisite_assets": {"type": "array", "items": {"type": "string"}},
+    "output_artifact_schema": {"type": "object"},
+    "permissions": {"type": "array", "items": {"type": "string"}},
+    "side_effects": {"type": "array", "items": {"type": "string"}},
+    "budget": {"type": "object"},
+    "failure_types": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GemAgents model patch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "patch_id", "parent_artifact_id", "before_semantic_hash", "after_semantic_hash",
+    "changes", "tasks_before", "tasks_after", "probes_before", "probes_after",
+    "decision", "reason"
+  ],
+  "properties": {
+    "patch_id": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "parent_artifact_id": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "before_semantic_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "after_semantic_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "changes": {"type": "array", "items": {"type": "object"}},
+    "tasks_before": {"type": "array"},
+    "tasks_after": {"type": "array"},
+    "probes_before": {"type": "array"},
+    "probes_after": {"type": "array"},
+    "decision": {"enum": ["accepted", "rejected"]},
+    "reason": {"type": "string", "minLength": 1}
+  }
+}

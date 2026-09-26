@@ -1,0 +1,9 @@
+name: gemagents
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - -e ".[dev,metabolic,memote,benchmark,status]"
+      - cplex==22.1.1.0

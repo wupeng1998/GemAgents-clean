@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "image": "python:3.11.15-slim",
+  "index_digest": "sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93",
+  "source": "https://hub.docker.com/_/python/tags?name=3.11.15-slim",
+  "checked_date": "2026-09-18",
+  "local_container_build": "not_run_no_daemon"
+}

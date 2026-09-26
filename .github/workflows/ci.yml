@@ -1,0 +1,105 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_memote:
+        description: Run the isolated MEMOTE profile
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - run: |
+          set -o pipefail
+          mkdir -p artifacts/ci/core
+          # Install only the selected profile from the hashed lock.  A local
+          # directory cannot satisfy pip's hash requirement, so install the
+          # project itself separately after its locked dependencies.
+          python -m pip install --require-hashes -r constraints/py310-dev.lock 2>&1 | tee artifacts/ci/core/pip-install-dependencies.log
+          python -m pip install --no-deps --no-build-isolation '.[dev]' 2>&1 | tee artifacts/ci/core/pip-install-project.log
+          python -m pip freeze > artifacts/ci/core/pip-freeze.txt
+      - run: python -m ruff check src tests scripts benchmarks
+      - run: python scripts/check_repository_layout.py --root .
+      - run: python scripts/check_import_architecture.py --root .
+      - run: git diff --check
+      - name: Verify isolated package installation
+        run: |
+          set -o pipefail
+          python scripts/verify_package_install.py --output artifacts/ci/core/package-install-verification.json 2>&1 | tee artifacts/ci/core/package-install-verification.log
+      - name: Verify clean snapshot and restore rehearsal
+        run: |
+          set -o pipefail
+          python scripts/verify_clean_clone.py --output artifacts/ci/core/clean-clone-verification.json 2>&1 | tee artifacts/ci/core/clean-clone-verification.log
+      - name: Run core tests with diagnostics
+        env:
+          GEMAGENTS_TEST_DIAGNOSTICS_DIR: artifacts/ci/core/package-install
+        run: |
+          mkdir -p artifacts/ci/core
+          set -o pipefail
+          python -m pytest tests/test_package_install.py tests/test_verify_package_install.py tests/test_verify_clean_clone.py tests/test_cli_builtins.py tests/test_permissions.py tests/test_round2_inventory.py tests/test_checkpoint.py tests/test_context_compaction.py tests/test_evidence_registry.py tests/test_logging_policy.py tests/test_asset_provenance.py tests/test_historical_run_index.py tests/test_maintain_repository.py tests/test_repository_layout_guard.py tests/test_import_architecture_guard.py --junitxml=artifacts/ci/core/pytest.xml 2>&1 | tee artifacts/ci/core/pytest.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-ci-artifacts
+          path: artifacts/ci/core
+          if-no-files-found: warn
+
+  metabolic-fixture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - run: |
+          set -o pipefail
+          mkdir -p artifacts/ci/metabolic
+          python -m pip install --require-hashes -r constraints/py310-dev-metabolic.lock 2>&1 | tee artifacts/ci/metabolic/pip-install-dependencies.log
+          python -m pip install --no-deps --no-build-isolation '.[dev,metabolic]' 2>&1 | tee artifacts/ci/metabolic/pip-install-project.log
+          python -m pip freeze > artifacts/ci/metabolic/pip-freeze.txt
+      - run: |
+          set -o pipefail
+          python -m pytest tests --junitxml=artifacts/ci/metabolic/pytest.xml 2>&1 | tee artifacts/ci/metabolic/pytest.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: metabolic-ci-artifacts
+          path: artifacts/ci/metabolic
+          if-no-files-found: warn
+
+  memote-profile:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_memote
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - run: |
+          set -o pipefail
+          mkdir -p artifacts/memote
+          python -m pip install --require-hashes -r constraints/py310-dev-metabolic-memote.lock 2>&1 | tee artifacts/memote/pip-install-dependencies.log
+          python -m pip install --no-deps --no-build-isolation '.[dev,metabolic,memote]' 2>&1 | tee artifacts/memote/pip-install-project.log
+          python -m pip freeze > artifacts/memote/pip-freeze.txt
+      - run: |
+          set -o pipefail
+          python -m pytest tests/test_reaction_library.py -k memote --junitxml=artifacts/memote/pytest.xml 2>&1 | tee artifacts/memote/pytest.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: memote-raw-output
+          path: artifacts/memote
+          if-no-files-found: ignore

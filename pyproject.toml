@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gemagents"
+version = "0.1.0"
+description = "A Python agent with deterministic metabolic reconstruction workflows."
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+license = { text = "MIT" }
+authors = [{ name = "GemAgents contributors" }]
+dependencies = [
+  "langgraph>=0.2,<2.0",
+  "langchain-core>=0.3,<2.0",
+  "langchain-openai>=0.2,<2.0",
+  "langchain-anthropic>=0.3,<2.0",
+  "langchain-google-genai>=2.0,<4.0",
+  "python-dotenv>=1.0,<2.0",
+  "pyyaml>=6.0,<7.0",
+  "requests>=2.31,<3.0",
+  "rich>=13.0,<15.0",
+]
+
+[project.optional-dependencies]
+metabolic = [
+  "cobra>=0.32,<0.33",
+  "biopython>=1.85,<2",
+  "pyhmmer>=0.12,<0.13",
+  "pyrodigal>=3.6,<4",
+  "smetana>=1.2,<1.3",
+  "straindesign>=1.19,<1.20",
+]
+memote = [
+  "memote==0.17.0",
+]
+benchmark = [
+  "openpyxl>=3.1,<4",
+]
+status = [
+  "psutil>=7,<8",
+]
+dev = [
+  "build>=1.2,<2.0",
+  "hatchling>=1.26,<2.0",
+  "jsonschema>=4.23,<5.0",
+  "pytest>=8.0,<9.0",
+  "ruff>=0.8,<1.0",
+]
+
+[project.scripts]
+gemagents = "GemAgents.cli:main"
+gemagent = "GemAgents.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/GemAgents"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

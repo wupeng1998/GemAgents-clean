@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GemAgents ReconstructionConfig",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "allow_ambiguous_ec_gpr": {
+      "type": "boolean",
+      "default": true,
+      "description": "Retain ambiguous EC matches as explicit OR-GPR candidates"
+    },
+    "allow_non_growing_draft": {
+      "type": "boolean"
+    },
+    "allow_unverified_gapfill": {
+      "type": "boolean"
+    },
+    "annotation": {
+      "enum": [
+        "auto",
+        "pgap",
+        "ncbi-import",
+        "ncbi-hmm",
+        "pyrodigal-ncbi-hmm"
+      ]
+    },
+    "annotation_gbk": {
+      "type": "string",
+      "minLength": 1
+    },
+    "biomass_library": {
+      "type": "string",
+      "minLength": 1
+    },
+    "biomass_min_similarity": {
+      "type": "number",
+      "maximum": 1,
+      "minimum": 0
+    },
+    "biomass_template": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clean_predictions": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clean_python": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clean_runtime": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clean_timeout": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ec_alias_source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clean_predictions_require_overlap": {
+      "type": "boolean"
+    },
+    "disable_clean_predictions_default": {
+      "type": "boolean"
+    },
+    "clean_top_fraction": {
+      "type": "number",
+      "maximum": 1,
+      "exclusiveMinimum": 0,
+      "default": 0.3
+    },
+    "cpus": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 128
+    },
+    "engine": {
+      "enum": [
+        "native",
+        "carveme",
+        "reconstructor"
+      ]
+    },
+    "gapfill_diagnostic_timeout": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "genetic_code": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "gpr_min_coverage": {
+      "type": "number",
+      "maximum": 1,
+      "minimum": 0
+    },
+    "gpr_min_identity": {
+      "type": "number",
+      "maximum": 1,
+      "minimum": 0
+    },
+    "gram": {
+      "enum": [
+        "positive",
+        "negative",
+        "unspecified"
+      ]
+    },
+    "hmm_dir": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_type": {
+      "enum": [
+        "auto",
+        "faa",
+        "fna"
+      ]
+    },
+    "kingdom": {
+      "enum": [
+        "bacteria",
+        "archaea"
+      ]
+    },
+    "max_edits": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "medium": {
+      "oneOf": [
+        {
+          "enum": [
+            "minimal",
+            "glucose_minimal",
+            "rich"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      ]
+    },
+    "medium_file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "memote": {
+      "type": "boolean"
+    },
+    "memote_solver_timeout": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "memote_timeout": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "min_growth": {
+      "type": "number",
+      "minimum": 0
+    },
+    "modelseed_reactions": {
+      "type": "string",
+      "minLength": 1
+    },
+    "organism": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pgap_config": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pgap_memory": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pgap_output": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pgap_script": {
+      "type": "string",
+      "minLength": 1
+    },
+    "qc_timeout": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "quality": {
+      "enum": [
+        "audit",
+        "repair"
+      ]
+    },
+    "reaction_library": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reaction_library_mode": {
+      "enum": [
+        "full",
+        "strict"
+      ],
+      "default": "strict",
+      "description": "Use the complete v6 reaction catalog by default"
+    },
+    "reference_growth_ceiling": {
+      "type": "boolean"
+    },
+    "reference_protein_fasta": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reference_scaffold": {
+      "type": "boolean",
+      "default": true,
+      "description": "Carry the public reference network into the default reference-assisted track"
+    },
+    "reference_scaffold_source_only": {
+      "type": "boolean",
+      "default": false
+    },
+    "reference_support": {
+      "type": "boolean",
+      "default": true
+    },
+    "reference_support_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "solver_timeout": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "timeout": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "universe": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evaluation_track": {
+      "enum": [
+        "de_novo_public",
+        "biomass_controlled",
+        "reference_assisted",
+        "authorized_private"
+      ],
+      "default": "reference_assisted"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "reference_growth_ceiling": {
+            "const": true
+          }
+        },
+        "required": [
+          "reference_growth_ceiling"
+        ]
+      },
+      "then": {
+        "required": [
+          "reference_support_path"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference_support": {
+            "const": false
+          }
+        },
+        "required": [
+          "reference_support"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "reference_support_path"
+          ]
+        }
+      }
+    }
+  ]
+}
